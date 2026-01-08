@@ -15,6 +15,8 @@ class Grid
 
 
     final private Cell[][] cells2D;
+    private Cell start;
+    private Cell target;
 
 
     public
@@ -30,7 +32,7 @@ class Grid
     {
         for( int y = 0; y < cells2D.length; y++ )
             for( int x = 0; x < cells2D[y].length; x++ )
-                cells2D[ y ][ x ] = new Cell( x, y );
+                cells2D[ y ][ x ] = new Cell( x, y, Cell.Status.WALKABLE );
     }
 
 
@@ -45,6 +47,7 @@ class Grid
     {
         validateBounds( indexX, indexY );
         cells2D[indexY][indexX].setStatus( Cell.Status.START );
+        start = cells2D[indexY][indexX];
     }
 
 
@@ -55,24 +58,17 @@ class Grid
     }
 
 
-    public void setOpen( int indexX, int indexY )
+    public void setWalkable( int indexX, int indexY )
     {
         validateBounds( indexX, indexY );
-        cells2D[indexY][indexX].setStatus( Cell.Status.OPEN );
+        cells2D[indexY][indexX].setStatus( Cell.Status.WALKABLE );
     }
 
 
-    public void setVisited( int indexX, int indexY )
+    public void setBlocked( int indexX, int indexY )
     {
         validateBounds( indexX, indexY );
-        cells2D[indexY][indexX].setStatus( Cell.Status.VISITED );
-    }
-
-
-    public void setClosed( int indexX, int indexY )
-    {
-        validateBounds( indexX, indexY );
-        cells2D[indexY][indexX].setStatus( Cell.Status.CLOSED );
+        cells2D[indexY][indexX].setStatus( Cell.Status.BLOCKED );
     }
 
 
@@ -106,53 +102,62 @@ class Grid
     int getCellsY() { return cells2D.length; }
 
 
-    private static class Cell
+    public
+    Cell getStart() { return start; }
+
+
+    public
+    Cell getTarget() { return target; }
+
+
+    public static
+    class Cell
     {
         final private int indexX, indexY;
 
-        private Status status = Status.OPEN;
+        private Status status;
 
 
-        private
-        Cell( int indexX, int indexY )
+        Cell( int indexX, int indexY, Status status )
         {
             this.indexX = indexX;
             this.indexY = indexY;
+            this.status = status;
         }
 
 
-        private
         Status getStatus()
         {
             return status;
         }
 
 
-        private
+        public
         void setStatus( Status status )
         {
             this.status = status;
         }
 
 
-        private enum Status
+        enum Status
         {
             NONE( 0x00000000 ),
-            OPEN(0xFFF4F1DE),
-            VISITED(0xFF3D405B),
-            CLOSED(0xFFE07A5F),
-            DISMISSED(0xFFF2CC8F),
-            START(0xFF81B29A),
-            TARGET(0xFFE07A5F);
+            WALKABLE( 0xFFEEEEEE ),
+            BLOCKED( 0xFFE07A5F ),
+            START( 0xFF81B29A ),
+            TARGET( 0xFFE07A5F );
 
             final private int color;
+
 
             Status( int color )
             {
                 this.color = color;
             }
 
-            public int getColor()
+
+            public
+            int getColor()
             {
                 return color;
             }

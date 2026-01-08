@@ -1,8 +1,8 @@
 package org.xsdn;
 
 import org.xsdn.search.Grid;
-import org.xsdn.search.algorithm.SearchAlgorithm;
-import org.xsdn.search.algorithm.NoSearch;
+import org.xsdn.search.algorithm.Dijkstra;
+import org.xsdn.search.algorithm.*;
 
 import processing.core.PApplet;
 
@@ -21,6 +21,7 @@ class SearchingAlgorithmsVisualizer extends PApplet
 
     Grid            grid;
     SearchAlgorithm algorithm;
+
 
     @Override
     public
@@ -48,10 +49,12 @@ class SearchingAlgorithmsVisualizer extends PApplet
         int targetX = grid.getCellsX() - 1;
         int targetY = grid.getCellsY() - 1;
 
-        algorithm = new NoSearch( grid, startX, startY, targetX, targetY );
+//        algorithm = new NoSearch( grid, startX, startY, targetX, targetY );
 //        algorithm = new AStar( grid, startX, startY, targetX, targetY );
-//        algorithm = new Dijkstra( grid, startX, startY, targetX, targetY );
+        algorithm = new Dijkstra( grid, startX, startY, targetX, targetY );
 //        algorithm = new BreadthFirstSearch( grid, startX, startY, targetX, targetY );
+
+        surface.setTitle( "Search Algorithm Visualizer [ " + algorithm.getName() + " ]" );
     }
 
 
@@ -59,13 +62,34 @@ class SearchingAlgorithmsVisualizer extends PApplet
     public
     void draw()
     {
+        if( algorithm.getStep() > 0 )
+            surface.setTitle( "Search Algorithm Visualizer [ " + algorithm.getName() + " ] [ Step: " + algorithm.getStep() + " ]" );
+
+        /* INPUT HANDLING */
+
+        /* LOGIC */
+        if ( algorithm.isRunning() )
+            algorithm.step();
+
+        /* RENDERING */
         background( color( 31, 63, 63) );
 
-        if ( algorithm.isRunning() )
-        {
-            // Einen Schritt ausführen oder den kompletten Algorithmus starten
-        }
-
         grid.render( this.g );
+    }
+
+
+    @Override
+    public void keyReleased()
+    {
+        if ( algorithm == null )
+            return;
+
+        if (key == ' ' || keyCode == 32)
+            algorithm.step();
+        else if ( key == 'r' || key == 'R' )
+            if ( algorithm.isRunning() )
+                algorithm.pause();
+            else
+                algorithm.run();
     }
 }

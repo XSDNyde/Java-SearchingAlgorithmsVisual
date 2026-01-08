@@ -20,4 +20,12 @@ class NoSearch extends BaseSearchAlgorithm
     {
 
     }
+
+
+    @Override
+    public
+    String getName()
+    {
+        return "No Search Algorithm";
+    }
 }

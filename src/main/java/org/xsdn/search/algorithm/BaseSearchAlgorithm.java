@@ -14,6 +14,7 @@ public abstract class BaseSearchAlgorithm implements SearchAlgorithm
     protected int     currentX;
     protected int     currentY;
     protected boolean running = false;
+    protected int     stepCount;
 
 
     public BaseSearchAlgorithm( Grid grid, int startX, int startY, int targetX, int targetY )
@@ -25,8 +26,17 @@ public abstract class BaseSearchAlgorithm implements SearchAlgorithm
         this.startY = startY;
         this.targetX = targetX;
         this.targetY = targetY;
+        this.reset();
+    }
+
+
+    @Override
+    public
+    void reset()
+    {
         this.currentX = startX;
         this.currentY = startY;
+        this.stepCount = 0;
     }
 
 
@@ -50,5 +60,13 @@ public abstract class BaseSearchAlgorithm implements SearchAlgorithm
     boolean isRunning()
     {
         return running;
+    }
+
+
+    @Override
+    public
+    int getStep()
+    {
+        return stepCount;
     }
 }
