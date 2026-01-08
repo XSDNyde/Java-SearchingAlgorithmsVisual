@@ -1,7 +1,8 @@
 package org.xsdn;
 
-
 import org.xsdn.search.Grid;
+import org.xsdn.search.algorithm.SearchAlgorithm;
+import org.xsdn.search.algorithm.NoSearch;
 
 import processing.core.PApplet;
 
@@ -18,8 +19,8 @@ class SearchingAlgorithmsVisualizer extends PApplet
     }
 
 
-    Grid grid;
-
+    Grid            grid;
+    SearchAlgorithm algorithm;
 
     @Override
     public
@@ -41,8 +42,16 @@ class SearchingAlgorithmsVisualizer extends PApplet
         surface.setVisible( true );
 
         grid = new Grid( width, height );
-        grid.setStart( 0, 0 );
-        grid.setTarget( 9, 9 );
+
+        int startX = 0;
+        int startY = 0;
+        int targetX = grid.getCellsX() - 1;
+        int targetY = grid.getCellsY() - 1;
+
+        algorithm = new NoSearch( grid, startX, startY, targetX, targetY );
+//        algorithm = new AStar( grid, startX, startY, targetX, targetY );
+//        algorithm = new Dijkstra( grid, startX, startY, targetX, targetY );
+//        algorithm = new BreadthFirstSearch( grid, startX, startY, targetX, targetY );
     }
 
 
@@ -51,6 +60,11 @@ class SearchingAlgorithmsVisualizer extends PApplet
     void draw()
     {
         background( color( 31, 63, 63) );
+
+        if ( algorithm.isRunning() )
+        {
+            // Einen Schritt ausführen oder den kompletten Algorithmus starten
+        }
 
         grid.render( this.g );
     }
